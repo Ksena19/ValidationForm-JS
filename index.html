@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Validation form</title>
+	<style type="text/css">
+			* {
+			padding: 0;
+			margin: 0;
+			box-sizing: border-box;
+		}
+		body {
+			background-color: #fff;
+		}
+		#myForm {
+			margin: 50px auto;
+			width: 600px;
+			border-radius: 5px;
+			border: 1px solid #000;
+			padding: 20px;
+		}
+	    label {
+ 		    display: flex;
+        justify-content: space-between;
+	    }
+      input {
+       margin-bottom : 10px;
+      }
+	    .btn {
+	    	
+	    	padding: 5px;
+	    	border-radius: 5px;
+	    	background: #000;
+	    	color: #fff;
+	    }
+      .error_style {
+        border: 1px solid red;
+      }
+       .error-color {
+		  color: red;
+       } 
+
+       .cnt {
+  text-align: center;
+}
+
+.cover {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  opacity: 0.6;
+  z-index: 100;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  overflow-x: auto;
+  overflow-y: scroll;
+  padding: 20px;
+  z-index: 200;
+}
+
+.content {
+  display: none;
+  width: 100%;
+  min-width: 200px;
+  width: 100%;
+  position: relative;
+  background-color: #FAFAFA;
+  z-index: 300;
+  padding: 50px 0;
+}
+
+.open-modal-btn {
+  cursor: pointer;
+}
+	</style>
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+</head>
+<body>
+<form id="myForm" class="form_valid">
+<label for="first_name">First name:*</label>
+		<input type="text" name="first_name" id="first_name" class="form-element" required>
+		  <span class="error error-name"></span>
+		<label for="last_name">Last name:*</label>
+		<input type="text" name="last_name" id="last_name" class="form-element" required>
+		  <span class="error error-last-name"></span>
+		<label for="date">Birthday*:</label>
+		<input type="date" name="date" id="date" class="form-element date_field" required>
+		  <span class="error error-birth"></span>
+		<p>
+		<label>Sex:*</label>
+		<label for="male">Male</label>
+		<input type="radio" name="sex" value ="male" id="male" required>
+		<label for="female">Female</label>
+		<input type="radio" name="sex" value ="female" id="female">
+       </p>
+         <span class="error-sex"></span>
+	
+		<label for="country">Country:*</label>
+		<p>
+			<select type="text" name="country" id="country" class="required form-element">
+                <option value="">Select country</option>
+				<option value="Russia">Russia</option>
+				<option value="USA">USA</option>
+				<option value="France">France</option>
+				<option value="Poland">Poland</option>
+			</select>			
+		</p>
+		  <span class="error-select"></span>
+		<label for="email">Email:*</label>
+		<input type="email" name="email" id="email" class="form-element email_field" required>
+		  <span class="error error-email"></span>
+
+		<label for="password">Password:*</label>
+		<input type="password" name="password" id="password" class="form-element password_field" max="10" required>
+		  <span class="error error-password"></span>
+
+		<label for="address">Address*</label>
+		<input type="text" name="address" id="address" class="form-element  address_field" required>
+		  <span class="error error-address"></span>
+		
+		<label for="notes">Notes</label>
+		<input type="textarea" name="notes" id="notes" class="form-element notes_field">
+		
+    <br>
+		<input type="submit" class="btn" value='Submit'>
+	</form>
+
+
+	<div id="wrapper">
+  <div class="cover"></div>
+  <div class="modal">
+    <div class="content">
+      <p>THIS IS CONTENT</p>
+     
+      </form>
+    </div>
+  </div>
+
+  <div class="cnt">
+    <button class="open-modal-btn">OPEN MODAL</button>
+  </div>
+</div>
+
+	<script type="text/javascript">
+
+	var btn = document.querySelector('.btn');
+	btn.addEventListener('click', checkForm);
+
+
+
+	var select = document.querySelector('.required');
+	var inputs = document.querySelectorAll('.form-element');
+	var first_name = document.querySelector('#first_name');
+	var last_name = document.querySelector('#last_name');
+	var birthDate = document.querySelector('#date');
+	var male_sex = document.querySelector('#male');
+	var female_sex = document.querySelector('#female');
+	var email = document.querySelector('#email');
+	var password = document.querySelector('#password');
+	var address = document.querySelector('#address');
+
+	// var errors = [];
+	// var errorText = {
+	// 	 1 : "The field 'First name' is empty",
+	// 	 2:  "The field 'Last name' is empty",
+	// 	 3:  "Pick your date of birth",
+	// 	 4:  "Pick a country",
+	// 	 5:  "The field 'E-mail' is empty",
+	// 	 6:  "Enter your password",
+	// 	 7:  "The field 'Address' is empty",
+	// 	 8:  "Enter correct email",
+	// 	 9:  "Current date is not allowed"
+ //    }
+ var errorsText = document.querySelectorAll('.error');
+ var error_name = document.querySelector('.error-name');
+ var error_last_name = document.querySelector('.error-last-name');
+ var error_birthDate = document.querySelector('.error-birth');
+ var error_select = document.querySelector('.error-select');
+ var error_sex = document.querySelector('.error-sex');
+ var error_country =  document.querySelector('.error-select');
+ var error_email =  document.querySelector('.error-email');
+ var error_password =  document.querySelector('.error-password'); 
+ var error_address = document.querySelector('.error-address');
+
+
+//  if (el.name == "first_name" && value == "") errorList.push({el : 1});
+//  if(el.name =="last_name" && value == "")errorList.push({el :2});
+//  if (el.name == "email" && value == "") errorList.push({el :5});
+//  if(el.name =="password" && value == "")errorList.push({el :6});
+//  if(el.name =="address" && value == "")errorList.push({el :7});
+//  if(el.name == "email" && value.match(email_exp)) errorList.push({el :8});
+//  break;
+  // var error = document.createElement('span');
+  // error.innerHTML = 'this field can not be empty';
+  // var errorText = document.querySelectorAll('.error');
+  // function showMessage() {
+  // 	for(i = 0; i < errorText.length; i++) {
+  // 	 	 errorText.innerHTML = 'Please';
+  	
+  	
+  // 	}
+  // }
+    
+  
+
+    var today = new Date();
+    var nameReg = /^[A-Za-z]+$/;
+    var email_exp = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+	function checkForm() {
+		 
+     for(i = 0; i < inputs.length; i++) { 
+	  
+           for(y = 0; y < errorsText.length; y++){ 
+           	if (inputs[i].value == "") {
+              inputs[i].style.borderColor = 'red';
+           	  errorsText[i].innerHTML = 'This field can not be empty!';
+           	  errorsText[i].classList.add('error-color');
+           	  
+           } else {
+              inputs[i].style.borderColor = 'black';
+           	  errorsText[i].style.display = 'none';
+           };
+           	  
+      
+           
+        
+        if(!first_name.value.match(nameReg)) {
+        	error_email.innerHTML = 'Please, enter correct first name !';
+	    	error_email.classList.add('error-color');
+        } else {
+           	  error_email.style.display = 'none';
+		}
+        if(select.value == 0)	{
+			 error_select.innerHTML = 'Please, select a country !';
+			 error_select.classList.add('error-color');
+        } else {
+           	  error_select.style.display = 'none';
+		}
+		
+		if( birthDate.value <= today ) {
+			error_birthDate.innerHTML = 'Please, pick a correct date';
+	    }
+	    if(!male_sex.checked && !female_sex.checked) {
+	    	error_sex.innerHTML = 'Please, choose an appropriate sex!';
+            error_sex.classList.add('error-color');
+           
+	    } else {
+	    	error_sex.style.display = 'none';
+	    }
+
+	    if(!email.value.match(email_exp)) {
+	    	error_email.innerHTML = 'Please, enter correct email !';
+	    	error_email.classList.add('error-color');
+	    }
+	}
+}
+	
+}
+
+
+
+
+		//    
+	 // //       	if(sex.value == '')	{
+		// // 	error_name.innerHTML = 'This field can not be empty !';
+		// // }
+		// 	if(email.value == '')	{
+		// 	error_email.innerHTML = 'This field can not be empty !';
+		// }
+		// 	if(password.value == '')	{
+		// 	error_password.innerHTML = 'This field can not be empty!';
+		// }
+		// 	if(address.value == '')	error_address.innerHTML = 'This field can not be empty !';
+		// }
+    
+    
+	 // open modal
+var wrap = $('#wrapper'),
+     btn = $('.btn'),
+     modal = $('.cover, .modal, .content');
+
+btn.on('click', function() {
+  modal.fadeIn();
+});
+
+// close modal
+$('.modal').click(function() {
+  wrap.on('click', function(event) {
+    var select = $('.content');
+    if ($(event.target).closest(select).length)
+      return;
+    modal.fadeOut();
+    wrap.unbind('click');
+  });
+});
+
+//  var el, // Сам элемент
+//  elName, // Имя элемента формы
+//  value, // Значение
+//  type; // Атрибут type для input-ов
+//   var email_exp = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+//   var today = new Date(); //для валдации дня рождения
+//  // Массив списка ошибок, по дефолту пустой
+//  var errorList = [];
+//  // Хэш с текстом ошибок (ключ - ID ошибки)
+//  var errorText = {
+//  1 : "The field 'First name' is empty",
+//  2:  "The field 'Last name' is empty",
+//  3:  "Pick your date of birth",
+//  4:  "Pick a country",
+//  5:  "The field 'E-mail' is empty",
+//  6:  "Enter your password",
+//  7:  "The field 'Address' is empty",
+//  8:  "Enter correct email",
+//  9:  "Current date is not allowed"
+//  }
+//  // Получаем семейство всех элементов формы
+//  // Проходимся по ним в цикле
+//  for (var i = 0; i < inputs.length; i++) {
+//  el = inputs[i];
+//  elName = el.nodeName.toLowerCase();
+//  value = el.value;
+//  if (elName == "input") { // INPUT
+//  // Определяем тип input-а
+//  type = el.type.toLowerCase();
+//  // Разбираем все инпуты по типам и обрабатываем содержимое
+//  switch (type) {
+//  case "text" :
+//  if (el.name == "first_name" && value == "") errorList.push({el : 1});
+//  if(el.name =="last_name" && value == "")errorList.push({el :2});
+//  if (el.name == "email" && value == "") errorList.push({el :5});
+//  if(el.name =="password" && value == "")errorList.push({el :6});
+//  if(el.name =="address" && value == "")errorList.push({el :7});
+//  if(el.name == "email" && value.match(email_exp)) errorList.push({el :8});
+//  break;
+//  case "date":
+//  if(el.name =="date" && value == "")errorList.push({el :3});
+//  if (today <= date)errorList.push({el :9});
+//  break;
+//  case "radio" :
+//  // Ничего не делаем
+//  break;
+//  default :
+//  // Сюда попадают input-ы, которые не требуют обработки
+//  // type = hidden, submit, button, image
+//  break;
+//  }
+//  } else if (elName == "select") { // SELECT
+//     if (value == 0) errorList.push({el :6});
+//  } else {
+
+//  }
+  
+//  }
+  
+//   function  printFormErrors() {
+
+//     for (i = 0; i < errorList.length; i++) {
+//     var error = document.createElement('span');
+//      error += errorText[errorList[i]]; 
+//      el.appendChild(error);
+//      el.сlassList.add(error_style);
+    
+//  	}
+//   }
+  
+//  // Финальная стадия
+//  // Если массив ошибок пуст - возвращаем true
+//  if (!errorList.length){
+//   alert('the form is successfully submitted');
+// } else {
+//  printFormErrors(); 
+// }
+
+//      return false;
+ 
+
+	</script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" charset="utf-8"></script>
+</body>
+</html>
